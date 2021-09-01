@@ -9,13 +9,17 @@
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
         <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <TextBlock HorizontalAlignment="Left" Margin="20,20,0,0" x:Uid="Video_Path_Label" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16"/>
-            <TextBox x:Name="videoFilePath" x:Uid="Video_Path_TextBox" HorizontalAlignment="Stretch" Margin="20,70,100,0" Text="" TextWrapping="Wrap" Height="35" VerticalAlignment="Top"/>
-            <Button x:Uid="Video_Select_Button"  Margin="0,70,20,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Height="35" Click="Select_File" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False"/>
-            <!--
-                The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
-                Place your content here.
-            -->
+            <TextBlock HorizontalAlignment="Left" Margin="20,20,0,0" x:Uid="Main_Video_Path_Label" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16"/>
+            <TextBox x:Name="videoFilePath" x:Uid="Main_Video_Path_TextBox" HorizontalAlignment="Stretch" Margin="20,70,100,0" Text="" TextWrapping="Wrap" Height="35" VerticalAlignment="Top"/>
+            <Button x:Uid="Main_Video_Select_Button"  Margin="0,70,20,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Height="35" Click="Select_File" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False"/>
+            <Button x:Uid="Main_Extract_Subtitles_Button"  Margin="0,115,20,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="150" Height="35" Click="Extract_Subtitles" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False"/>
+            <TextBlock HorizontalAlignment="Left" Margin="20,165,0,0" x:Uid="Main_Subtitles_Label" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16"/>
+            <Border HorizontalAlignment="Stretch" Margin="20,210,20,0" VerticalAlignment="Top" Height="80" CornerRadius="5">
+                <Border.Background>
+                    <SolidColorBrush Color="#FFD7E6F5"/>
+                </Border.Background>
+                <TextBlock x:Name="subtitlesPreview" HorizontalAlignment="Stretch" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="14" Height="80" Padding="5"/>
+            </Border>
         </Grid>
     </Grid>
 </Page>

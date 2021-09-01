@@ -28,5 +28,10 @@ namespace SubtitleExtractor.Views
                 this.videoFilePath.Text = file.Path;
             }
         }
+
+        private void Extract_Subtitles(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+
+        }
     }
 }
