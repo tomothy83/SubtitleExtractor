@@ -9,6 +9,9 @@
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
         <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+            <TextBlock HorizontalAlignment="Left" Margin="20,20,0,0" x:Uid="Video_Path_Label" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16"/>
+            <TextBox x:Name="videoFilePath" x:Uid="Video_Path_TextBox" HorizontalAlignment="Stretch" Margin="20,70,100,0" Text="" TextWrapping="Wrap" Height="35" VerticalAlignment="Top"/>
+            <Button x:Uid="Video_Select_Button"  Margin="0,70,20,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Height="35" Click="Select_File" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False"/>
             <!--
                 The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.
