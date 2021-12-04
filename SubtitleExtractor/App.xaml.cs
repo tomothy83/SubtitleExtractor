@@ -3,6 +3,9 @@
 using SubtitleExtractor.Services;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.AppService;
+using Windows.ApplicationModel.Background;
+using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 
@@ -10,6 +13,11 @@ namespace SubtitleExtractor
 {
     public sealed partial class App : Application
     {
+        public static AppServiceConnection AppServiceConnection = null;
+        public static BackgroundTaskDeferral AppServiceDeferral = null;
+        public static event EventHandler AppServiceDisconnected;
+        public static event EventHandler<AppServiceTriggerDetails> AppServiceConnected;
+
         private Lazy<ActivationService> _activationService;
 
         private ActivationService ActivationService
@@ -32,15 +40,29 @@ namespace SubtitleExtractor
             {
                 await ActivationService.ActivateAsync(args);
             }
-            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
-            {
-                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-            }
         }
 
         protected override async void OnActivated(IActivatedEventArgs args)
         {
             await ActivationService.ActivateAsync(args);
+        }
+
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            base.OnBackgroundActivated(args);
+            IBackgroundTaskInstance taskInstance = args.TaskInstance;
+            if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details)
+            {
+                // only accept connections from callers in the same package
+                if (details.CallerPackageFamilyName == Package.Current.Id.FamilyName)
+                {
+                    AppServiceDeferral = taskInstance.GetDeferral();
+                    taskInstance.Canceled += OnTaskCanceled;
+                    AppServiceConnection = details.AppServiceConnection;
+                    AppServiceConnected?.Invoke(this, args.TaskInstance.TriggerDetails as AppServiceTriggerDetails);
+                    AppServiceConnection.ServiceClosed += AppServiceConnection_ServiceClosed;
+                }
+            }
         }
 
         private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
@@ -62,6 +84,19 @@ namespace SubtitleExtractor
         protected override async void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
         {
             await ActivationService.ActivateFromShareTargetAsync(args);
+        }
+
+        private void OnTaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        {
+            AppServiceDeferral?.Complete();
+            AppServiceDeferral = null;
+            AppServiceConnection = null;
+            AppServiceDisconnected?.Invoke(this, null);
+        }
+
+        private void AppServiceConnection_ServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)
+        {
+            AppServiceDeferral?.Complete();
         }
     }
 }

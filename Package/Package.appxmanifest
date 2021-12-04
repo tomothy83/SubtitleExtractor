@@ -12,8 +12,8 @@
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>Package</DisplayName>
-    <PublisherDisplayName>tomot</PublisherDisplayName>
+    <DisplayName>Subtitle Extractor</DisplayName>
+    <PublisherDisplayName>tomothy83</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -40,6 +40,9 @@
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
+        <uap:Extension Category="windows.appService">
+          <uap:AppService Name="InProcessAppService" />
+        </uap:Extension>
         <desktop:Extension
           xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
           Category="windows.fullTrustProcess"
