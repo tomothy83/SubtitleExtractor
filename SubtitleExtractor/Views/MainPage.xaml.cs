@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using SubtitleExtractor.ViewModels;
-
+using Windows.ApplicationModel;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml.Controls;
 
 namespace SubtitleExtractor.Views
@@ -29,9 +30,12 @@ namespace SubtitleExtractor.Views
             }
         }
 
-        private void Extract_Subtitles(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void Extract_Subtitles(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
         }
     }
 }

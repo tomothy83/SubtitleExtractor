@@ -1,8 +1,9 @@
 ﻿using System;
 
 using SubtitleExtractor.Services;
-
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 
 namespace SubtitleExtractor
@@ -30,6 +31,10 @@ namespace SubtitleExtractor
             if (!args.PrelaunchActivated)
             {
                 await ActivationService.ActivateAsync(args);
+            }
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
             }
         }
 

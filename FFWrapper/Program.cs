@@ -6,7 +6,10 @@ namespace FFWrapper
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.Title = "Hello World";
+            Console.WriteLine("This process has access to the entire public desktop API surface");
+            Console.WriteLine("Press any key to exit ...");
+            Console.ReadLine();
         }
     }
 }
