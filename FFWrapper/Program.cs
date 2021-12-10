@@ -10,8 +10,6 @@ namespace FFWrapper
     {
         static async Task Main(string[] args)
         {
-            Console.Title = "Hello World";
-
             AppServiceConnection conn;
             // Add the connection.
             conn = new AppServiceConnection();
@@ -55,13 +53,8 @@ namespace FFWrapper
                             await conn.SendMessageAsync(message);
                             break;
                         default:
-                            Console.WriteLine("Unknown command:" + cmd);
                             break;
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Error: command is not set.");
                 }
             }
             conn.Dispose();
