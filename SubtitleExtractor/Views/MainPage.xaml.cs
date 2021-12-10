@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using SubtitleExtractor.Core.Helpers;
 using SubtitleExtractor.ViewModels;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
@@ -16,6 +18,8 @@ namespace SubtitleExtractor.Views
     public sealed partial class MainPage : Page
     {
         public MainViewModel ViewModel { get; } = new MainViewModel();
+
+        private string Subtitles { get; set; }
 
         private string TempFolder
         {
@@ -41,7 +45,8 @@ namespace SubtitleExtractor.Views
             Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
             {
-                this.videoFilePath.Text = file.Path;
+                videoFilePath.Text = file.Path;
+                Subtitles = null;
             }
         }
 
@@ -109,16 +114,30 @@ namespace SubtitleExtractor.Views
 
         private async Task<ValueSet> HandleSubtitles(ValueSet message)
         {
-            string subtitlesFilename = message["SubtitlesFileName"] as string;
-            string subtitlesFilepath = Path.Combine(TempFolder, subtitlesFilename);
-            string subtitles = await File.ReadAllTextAsync(subtitlesFilepath);
+            string subtitlesFileName = message["SubtitlesFileName"] as string;
+            string subtitlesFilePath = Path.Combine(TempFolder, subtitlesFileName);
+            StorageFile srtFile = await StorageFile.GetFileFromPathAsync(subtitlesFilePath);
+            string srtFileContent = await FileIO.ReadTextAsync(srtFile);
+            string subtitles = await SubRipText.ExtractText(srtFileContent);
+            if (subtitles == null)
+            {
+                return new ValueSet
+                {
+                    { "Status", "Error" }
+                };
+            }
+            Subtitles = subtitles;
+            StringInfo si = new StringInfo(subtitles);
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                subtitlesPreview.Text = subtitles;
+                subtitlesPreview.Text = si.SubstringByTextElements(0, 100);
             });
-            ValueSet response = new ValueSet();
-            response.Add("Status", "OK");
-            return response;
+            // set subtitles file
+            await srtFile.DeleteAsync();
+            return new ValueSet
+            {
+                { "Status", "OK" }
+            };
         }
     }
 }
